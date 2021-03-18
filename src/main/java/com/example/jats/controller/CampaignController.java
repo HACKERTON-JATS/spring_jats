@@ -23,7 +23,7 @@ public class CampaignController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long createCampaign(CampaignRequest request) {
+    public Long createCampaign(@RequestBody CampaignRequest request) {
         return campaignService.createCampaign(request);
     }
 

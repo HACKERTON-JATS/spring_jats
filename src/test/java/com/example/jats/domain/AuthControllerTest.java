@@ -72,7 +72,7 @@ public class AuthControllerTest {
 
     @Test
     void signInTest() throws Exception {
-        SignInRequest request = new SignInRequest("idaaaaa","paaaawd");
+        SignInRequest request = new SignInRequest("id","pwd");
 
         mockMvc.perform(post("/auth")
                 .content(new ObjectMapper().writeValueAsString(request))
@@ -87,6 +87,6 @@ public class AuthControllerTest {
         mockMvc.perform(post("/auth")
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
 }
