@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JATS_DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    generate-ddl: true
+    database: mysql
+    hibernate:
+      ddl-auto: update
+auth:
+  jwt:
+    secret: ${JATS_JWT_SECRET}
+    header: ${JWT_HEADER}
+    prefix: ${JWT_PREFIX}
+    exp:
+      access: ${JWT_ACCESS_EXP}

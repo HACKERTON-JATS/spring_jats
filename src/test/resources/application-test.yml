@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: test
+    password: 1234
+  jpa:
+    generate-ddl: true
+    database: h2
+    hibernate:
+      ddl-auto: update
+auth:
+  jwt:
+    secret: secret
+    header: Authorization
+    prefix: Bearer
+    exp:
+      access: 100
+      refresh: 10000
