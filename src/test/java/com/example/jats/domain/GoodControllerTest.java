@@ -25,7 +25,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -78,7 +77,7 @@ public class GoodControllerTest {
     void createGood() throws Exception {
         Campaign campaign = createCampaign("content", "title1", true);
 
-        mockMvc.perform(patch("/like/"+campaign.getId())).andDo(print())
+        mockMvc.perform(patch("/like/"+campaign.getId()))
                 .andExpect(status().isOk());
 
     }

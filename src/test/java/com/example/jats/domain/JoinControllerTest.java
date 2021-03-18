@@ -111,6 +111,7 @@ public class JoinControllerTest {
         MvcResult result = mockMvc.perform(get("/campaign/list")
                 .param("size", "10")
                 .param("page", "0"))
+                .andExpect(status().isOk())
                 .andReturn();
 
         CampaignListResponse response = new ObjectMapper().registerModule(

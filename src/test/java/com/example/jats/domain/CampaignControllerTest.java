@@ -36,7 +36,6 @@ import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -114,7 +113,7 @@ public class CampaignControllerTest {
 
         MvcResult result = mockMvc.perform(post("/campaign")
                 .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -134,7 +133,7 @@ public class CampaignControllerTest {
 
         mockMvc.perform(post("/campaign")
                 .content(new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound());
     }
 
