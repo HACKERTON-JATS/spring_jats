@@ -22,7 +22,7 @@ dependencies {
 	// starter web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'junit:junit:4.12'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -42,7 +42,11 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
 	// security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'junit:junit:4.12'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
 
 	// list

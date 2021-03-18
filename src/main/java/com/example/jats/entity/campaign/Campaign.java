@@ -1,10 +1,9 @@
 package com.example.jats.entity.campaign;
 
 import com.example.jats.entity.campaign_file.CampaignFile;
-import com.example.jats.entity.comment_file.CommentFile;
 import com.example.jats.entity.comment.Comment;
-import com.example.jats.entity.join.Join;
-import com.example.jats.entity.like.Like;
+import com.example.jats.entity.join.Participate;
+import com.example.jats.entity.good.Good;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.enums.Region;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -29,7 +28,6 @@ public class Campaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -49,9 +47,11 @@ public class Campaign {
     private Long likeCnt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd`T`hh:mm:SS")
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd`T`hh:mm:SS")
+    @Column(nullable = false)
     private LocalDateTime endAt;
 
     @JsonBackReference
@@ -60,11 +60,11 @@ public class Campaign {
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Like> likes;
+    private List<Good> goods;
 
     @JsonManagedReference
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @JsonBackReference
@@ -73,7 +73,7 @@ public class Campaign {
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Join> joins;
+    private List<Participate> Participates;
 
     public Campaign changeLikeCnt(int num) {
         this.likeCnt += num;

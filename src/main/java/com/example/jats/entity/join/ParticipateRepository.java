@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface JoinRepository extends CrudRepository<Join, Long> {
+public interface ParticipateRepository extends CrudRepository<Participate, Long> {
     void deleteAllByCampaign(Campaign campaign);
 
-    Page<Join> findAllByUser(User user, Pageable pageable);
+    Page<Participate> findAllByUser(User user, Pageable pageable);
 }

@@ -1,9 +1,7 @@
 package com.example.jats.service.user;
 
-import com.example.jats.entity.campaign.Campaign;
-import com.example.jats.entity.campaign.CampaignRepository;
-import com.example.jats.entity.join.Join;
-import com.example.jats.entity.join.JoinRepository;
+import com.example.jats.entity.join.Participate;
+import com.example.jats.entity.join.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.exceptions.UserNotFoundException;
@@ -25,7 +23,7 @@ public class UserCampaignServiceImpl implements UserCampaignService {
 
     private final AuthenticationFacade authenticationFacade;
     private final UserRepository userRepository;
-    private final JoinRepository joinRepository;
+    private final ParticipateRepository participateRepository;
 
     @Override
     public CampaignListResponse getUserCampaign(Pageable pageable) {
@@ -33,21 +31,20 @@ public class UserCampaignServiceImpl implements UserCampaignService {
                 .orElseThrow(UserNotFoundException::new);
 
         List<CampaignContentResponse> campaignContentResponseList = new ArrayList<>();
-        Page<Join> joins = joinRepository.findAllByUser(user, pageable);
+        Page<Participate> joins = participateRepository.findAllByUser(user, pageable);
 
-        for(Join join : joins) {
+        for(Participate participate : joins) {
 
             campaignContentResponseList.add(
                     CampaignContentResponse.builder()
-                            .likeCnt(join.getCampaign().getLikeCnt())
-                            .path(Lists.transform(join.getCampaign().getCampaignFiles(), list -> list.getPath()))
-                            .fileName(Lists.transform(join.getCampaign().getCampaignFiles(), list -> list.getFileName()))
-                            .title(join.getCampaign().getTitle())
-                            .isLiked(join.getCampaign().getLikes().stream().anyMatch(like -> like.getUser().equals(user)))
-                            .endAt(join.getCampaign().getEndAt())
-                            .createdAt(join.getCampaign().getCreatedAt())
-                            .content(join.getCampaign().getContent())
-                            .likeCnt(join.getCampaign().getLikeCnt())
+                            .likeCnt(participate.getCampaign().getLikeCnt())
+                            .path(Lists.transform(participate.getCampaign().getCampaignFiles(), list -> list.getPath()))
+                            .fileName(Lists.transform(participate.getCampaign().getCampaignFiles(), list -> list.getFileName()))
+                            .title(participate.getCampaign().getTitle())
+                            .isLiked(participate.getCampaign().getGoods().stream().anyMatch(like -> like.getUser().equals(user)))
+                            .endAt(participate.getCampaign().getEndAt())
+                            .createdAt(participate.getCampaign().getCreatedAt())
+                            .content(participate.getCampaign().getContent())
                             .build()
             );
         }

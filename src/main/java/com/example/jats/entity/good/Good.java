@@ -1,4 +1,4 @@
-package com.example.jats.entity.join;
+package com.example.jats.entity.good;
 
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.user.User;
@@ -9,28 +9,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "join_tbl")
-public class Join {
+public class Good {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
     @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @JsonManagedReference
+    @ManyToOne
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
-    @ManyToOne
-    @JsonManagedReference
-    @JoinColumn(name = "user_id")
-    private User user;
 
 }

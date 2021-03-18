@@ -2,11 +2,10 @@ package com.example.jats.entity.user;
 
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.comment.Comment;
-import com.example.jats.entity.join.Join;
-import com.example.jats.entity.like.Like;
+import com.example.jats.entity.join.Participate;
+import com.example.jats.entity.good.Good;
 import com.example.jats.entity.user.enums.Region;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +33,7 @@ public class User {
 
     @JsonBackReference
     @OneToMany(mappedBy = "user")
-    private List<Like> likes;
+    private List<Good> goods;
 
     @JsonBackReference
     @OneToMany(mappedBy = "user")
@@ -46,6 +45,6 @@ public class User {
 
     @JsonBackReference
     @OneToMany(mappedBy = "user")
-    private List<Join> joins;
+    private List<Participate> Participates;
 
 }

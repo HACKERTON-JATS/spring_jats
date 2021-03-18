@@ -1,19 +1,18 @@
 package com.example.jats.controller;
 
-import com.example.jats.service.like.LikeService;
+import com.example.jats.service.good.GoodService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
-public class LikeController {
+public class GoodController {
 
-    private final LikeService likeService;
+    private final GoodService goodService;
 
     @PatchMapping("/{campaignId}")
     public void createLike(@PathVariable Long campaignId) {
-        likeService.createLike(campaignId);
+        goodService.createLike(campaignId);
     }
 }
