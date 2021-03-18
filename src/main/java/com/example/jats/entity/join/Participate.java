@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "join_tbl")
+@Table(name = "participate_tbl")
 public class Participate {
 
     @Id

@@ -1,11 +1,10 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${JATS_DB_URL}
+    url: jdbc:mysql://211.38.86.92:3306/jats?serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
-    generate-ddl: true
     database: mysql
     hibernate:
       ddl-auto: update
