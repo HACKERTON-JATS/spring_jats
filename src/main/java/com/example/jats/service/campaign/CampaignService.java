@@ -10,7 +10,7 @@ public interface CampaignService {
 
     CampaignListResponse getCampaignList(Pageable pageable);
 
-    void joinCampaign(Long campaignId);
+    void participateCampaign(Long campaignId);
 
     Long deleteCampaign(Long campaignId);
 }

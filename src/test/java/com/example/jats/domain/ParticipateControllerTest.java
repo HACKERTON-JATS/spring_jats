@@ -4,17 +4,16 @@ import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
 import com.example.jats.entity.good.GoodRepository;
-import com.example.jats.entity.join.Participate;
-import com.example.jats.entity.join.ParticipateRepository;
+import com.example.jats.entity.participate.Participate;
+import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.entity.user.enums.Region;
-import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.payload.request.CampaignRequest;
+import com.example.jats.payload.response.CampaignBasicListResponse;
 import com.example.jats.payload.response.CampaignListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -41,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JatsApplication.class)
 @ActiveProfiles({"test"})
-public class JoinControllerTest {
+public class ParticipateControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -115,11 +113,11 @@ public class JoinControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        CampaignListResponse response = new ObjectMapper().registerModule(
-                new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), CampaignListResponse.class);
+        CampaignBasicListResponse response = new ObjectMapper().registerModule(
+                new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), CampaignBasicListResponse.class);
 
-        Assertions.assertEquals(response.getCampaignContentResponses().size(), 3);
-        Assertions.assertEquals(response.getCampaignContentResponses().get(0).getTitle(), "watched");
+        Assertions.assertEquals(response.getCampaignBasicResponses().size(), 3);
+        Assertions.assertEquals(response.getCampaignBasicResponses().get(0).getTitle(), "watched");
     }
 
 

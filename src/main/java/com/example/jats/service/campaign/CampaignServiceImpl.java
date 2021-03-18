@@ -4,16 +4,17 @@ import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
 import com.example.jats.entity.campaign_file.CampaignFileRepository;
 import com.example.jats.entity.comment.CommentRepository;
-import com.example.jats.entity.join.Participate;
-import com.example.jats.entity.join.ParticipateRepository;
+import com.example.jats.entity.participate.Participate;
+import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.good.GoodRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
-import com.example.jats.exceptions.AlreadyJoinException;
+import com.example.jats.exceptions.AlreadyParticipateException;
 import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.exceptions.InvalidAccessException;
 import com.example.jats.exceptions.UserNotFoundException;
 import com.example.jats.payload.request.CampaignRequest;
+import com.example.jats.payload.response.CampaignBasicResponse;
 import com.example.jats.payload.response.CampaignContentResponse;
 import com.example.jats.payload.response.CampaignListResponse;
 import com.example.jats.security.auth.AuthenticationFacade;
@@ -80,12 +81,14 @@ public class CampaignServiceImpl implements CampaignService {
                             .title(campaign.getTitle())
                             .content(campaign.getContent())
                             .createdAt(campaign.getCreatedAt())
-                            .endAt(campaign.getEndAt())
                             .id(campaign.getId())
-                            .isLiked(isLiked)
+                            .endAt(campaign.getEndAt())
+                            .isLiked(campaign.getIsAccepted())
                             .fileName(Lists.transform(campaign.getCampaignFiles(), file -> file.getFileName()))
                             .path(Lists.transform(campaign.getCampaignFiles(), file -> file.getPath()))
                             .likeCnt(campaign.getLikeCnt())
+                            .isLiked(isLiked)
+                            .isMine(campaign.getUser().equals(user))
                             .build()
             );
         }
@@ -97,17 +100,17 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public void joinCampaign(Long campaignId) {
+    public void participateCampaign(Long campaignId) {
         if(!authenticationFacade.isLogin())
             throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(InvalidAccessException::new);
 
-        Campaign campaign = campaignRepository.findById(campaignId)
+        Campaign campaign = campaignRepository.findByIdAndIsAcceptedTrueAndEndAtAfter(campaignId, LocalDateTime.now())
                 .orElseThrow(CampaignNotFoundException::new);
 
-        if (user.getParticipates().stream().anyMatch(join -> join.getUser().equals(user)))
-            throw new AlreadyJoinException();
+        if (user.getParticipates().stream().anyMatch(participate -> participate.getUser().equals(user)))
+            throw new AlreadyParticipateException();
 
         participateRepository.save(
                 Participate.builder()

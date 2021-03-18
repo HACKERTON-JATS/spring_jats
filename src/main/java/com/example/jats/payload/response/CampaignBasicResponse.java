@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CampaignContentResponse {
+public class CampaignBasicResponse {
 
     private Long id;
 
@@ -34,7 +34,4 @@ public class CampaignContentResponse {
     private List<String> path;
 
     private List<String> fileName;
-
-    private Boolean isMine;
-
 }

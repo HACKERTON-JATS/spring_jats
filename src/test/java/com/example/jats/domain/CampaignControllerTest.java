@@ -3,8 +3,7 @@ package com.example.jats.domain;
 import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
-import com.example.jats.entity.join.Participate;
-import com.example.jats.entity.join.ParticipateRepository;
+import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.good.GoodRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
@@ -32,7 +31,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -155,7 +153,7 @@ public class CampaignControllerTest {
 
     @Test
     @WithMockUser(username = "id", password = "pwd")
-    void joinCampaignTest() throws Exception {
+    void participateCampaignTest() throws Exception {
         Campaign campaign = createCampaign("watched11", "watched", true);
 
         mockMvc.perform(patch("/campaign/"+campaign.getId()))

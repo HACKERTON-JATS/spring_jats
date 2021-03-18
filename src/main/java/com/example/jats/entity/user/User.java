@@ -2,7 +2,7 @@ package com.example.jats.entity.user;
 
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.comment.Comment;
-import com.example.jats.entity.join.Participate;
+import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.good.Good;
 import com.example.jats.entity.user.enums.Region;
 import com.fasterxml.jackson.annotation.JsonBackReference;

@@ -28,8 +28,8 @@ public class CampaignController {
     }
 
     @PatchMapping("/{campaignId}")
-    public void joinCampaign(@PathVariable Long campaignId) {
-        campaignService.joinCampaign(campaignId);
+    public void participateCampaign(@PathVariable Long campaignId) {
+        campaignService.participateCampaign(campaignId);
     }
 
     @DeleteMapping("/{campaignId}")

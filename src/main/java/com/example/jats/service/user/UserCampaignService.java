@@ -1,9 +1,9 @@
 package com.example.jats.service.user;
 
-import com.example.jats.payload.response.CampaignListResponse;
+import com.example.jats.payload.response.CampaignBasicListResponse;
 import org.springframework.data.domain.Pageable;
 
 
 public interface UserCampaignService {
-    CampaignListResponse getUserCampaign(Pageable pageable);
+    CampaignBasicListResponse getUserCampaign(Pageable pageable);
 }

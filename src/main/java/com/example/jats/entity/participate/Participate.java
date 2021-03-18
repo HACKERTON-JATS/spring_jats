@@ -1,4 +1,4 @@
-package com.example.jats.entity.join;
+package com.example.jats.entity.participate;
 
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.user.User;
@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Builder

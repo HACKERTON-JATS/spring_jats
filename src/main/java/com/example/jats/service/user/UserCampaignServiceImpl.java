@@ -1,13 +1,13 @@
 package com.example.jats.service.user;
 
-import com.example.jats.entity.join.Participate;
-import com.example.jats.entity.join.ParticipateRepository;
+import com.example.jats.entity.participate.Participate;
+import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.exceptions.InvalidAccessException;
 import com.example.jats.exceptions.UserNotFoundException;
-import com.example.jats.payload.response.CampaignContentResponse;
-import com.example.jats.payload.response.CampaignListResponse;
+import com.example.jats.payload.response.CampaignBasicListResponse;
+import com.example.jats.payload.response.CampaignBasicResponse;
 import com.example.jats.security.auth.AuthenticationFacade;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +27,18 @@ public class UserCampaignServiceImpl implements UserCampaignService {
     private final ParticipateRepository participateRepository;
 
     @Override
-    public CampaignListResponse getUserCampaign(Pageable pageable) {
+    public CampaignBasicListResponse getUserCampaign(Pageable pageable) {
         if(!authenticationFacade.isLogin())
             throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
-        List<CampaignContentResponse> campaignContentResponseList = new ArrayList<>();
-        Page<Participate> joins = participateRepository.findAllByUser(user, pageable);
+        List<CampaignBasicResponse> campaignBasicResponses = new ArrayList<>();
+        Page<Participate> participates = participateRepository.findAllByUser(user, pageable);
 
-        for(Participate participate : joins) {
-            campaignContentResponseList.add(
-                    CampaignContentResponse.builder()
+        for(Participate participate : participates) {
+            campaignBasicResponses.add(
+                    CampaignBasicResponse.builder()
                             .likeCnt(participate.getCampaign().getLikeCnt())
                             .path(Lists.transform(participate.getCampaign().getCampaignFiles(), list -> list.getPath()))
                             .fileName(Lists.transform(participate.getCampaign().getCampaignFiles(), list -> list.getFileName()))
@@ -47,13 +47,16 @@ public class UserCampaignServiceImpl implements UserCampaignService {
                             .endAt(participate.getCampaign().getEndAt())
                             .createdAt(participate.getCampaign().getCreatedAt())
                             .content(participate.getCampaign().getContent())
+                            .likeCnt(participate.getCampaign().getLikeCnt())
+                            .id(participate.getCampaign().getId())
                             .build()
             );
         }
-        return CampaignListResponse.builder()
-                .totalElements(joins.getTotalElements())
-                .totalPages(joins.getTotalPages())
-                .campaignContentResponses(campaignContentResponseList)
+
+        return CampaignBasicListResponse.builder()
+                .totalElements(participates.getTotalElements())
+                .totalPages(participates.getTotalPages())
+                .campaignBasicResponses(campaignBasicResponses)
                 .build();
 
     }
