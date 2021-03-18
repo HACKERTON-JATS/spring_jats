@@ -4,6 +4,7 @@ import com.example.jats.entity.join.Participate;
 import com.example.jats.entity.join.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
+import com.example.jats.exceptions.InvalidAccessException;
 import com.example.jats.exceptions.UserNotFoundException;
 import com.example.jats.payload.response.CampaignContentResponse;
 import com.example.jats.payload.response.CampaignListResponse;
@@ -27,6 +28,8 @@ public class UserCampaignServiceImpl implements UserCampaignService {
 
     @Override
     public CampaignListResponse getUserCampaign(Pageable pageable) {
+        if(!authenticationFacade.isLogin())
+            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
