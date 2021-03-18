@@ -4,6 +4,7 @@ import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
 import com.example.jats.entity.good.GoodRepository;
+import com.example.jats.entity.join.Participate;
 import com.example.jats.entity.join.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
@@ -70,7 +71,7 @@ public class JoinControllerTest {
 
         User user = userRepository.save(
                 User.builder()
-                        .region(Region.NORTHCHUNG)
+                        .region(Region.KANGWON)
                         .name("hong")
                         .password(passwordEncoder.encode("pwd"))
                         .id("id")
@@ -123,7 +124,7 @@ public class JoinControllerTest {
 
 
     public Campaign createCampaign(String content, String title, boolean isAccepted) {
-        return campaignRepository.save(Campaign.builder()
+        Campaign campaign = campaignRepository.save(Campaign.builder()
                 .content(content)
                 .likeCnt(0L)
                 .user(userRepository.findById("id").get())
@@ -133,5 +134,12 @@ public class JoinControllerTest {
                 .endAt(LocalDateTime.now().plusDays(1))
                 .isAccepted(isAccepted)
                 .build());
+        participateRepository.save(
+                Participate.builder()
+                        .user(userRepository.findById("id").get())
+                        .campaign(campaign)
+                        .build()
+        );
+        return campaign;
     }
 }

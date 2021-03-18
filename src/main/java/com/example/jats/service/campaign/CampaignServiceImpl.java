@@ -41,10 +41,18 @@ public class CampaignServiceImpl implements CampaignService {
     private final GoodRepository goodRepository;
 
     @Override
+    @Transactional
     public Long createCampaign(CampaignRequest request) {
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
-        return campaignRepository.save(request.toEntity(user)).getId();
+
+        Campaign campaign =  campaignRepository.save(request.toEntity(user));
+        participateRepository.save(
+                Participate.builder()
+                        .campaign(campaign)
+                        .user(user)
+                        .build());
+        return campaign.getId();
     }
 
     @Override

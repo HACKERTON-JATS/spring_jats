@@ -34,7 +34,6 @@ public class UserCampaignServiceImpl implements UserCampaignService {
         Page<Participate> joins = participateRepository.findAllByUser(user, pageable);
 
         for(Participate participate : joins) {
-
             campaignContentResponseList.add(
                     CampaignContentResponse.builder()
                             .likeCnt(participate.getCampaign().getLikeCnt())
