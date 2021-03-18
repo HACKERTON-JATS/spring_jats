@@ -16,3 +16,5 @@ auth:
     prefix: ${JWT_PREFIX}
     exp:
       access: ${JWT_ACCESS_EXP}
+server:
+  port: 8002
