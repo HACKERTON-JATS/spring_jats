@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +19,6 @@ public class SignUpRequest {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Region region;
 }

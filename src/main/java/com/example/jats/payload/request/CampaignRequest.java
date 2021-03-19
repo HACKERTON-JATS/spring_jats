@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,6 +24,7 @@ public class CampaignRequest {
 
     private String content;
 
+    @Enumerated(EnumType.STRING)
     private Region region;
 
     public Campaign toEntity(User user) {
