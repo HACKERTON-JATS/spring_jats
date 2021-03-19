@@ -38,19 +38,19 @@ public class GoodServiceImpl implements GoodService {
 
         int changeNum = campaign.getGoods().stream().filter(good -> good.getUser().equals(user))
                 .findFirst()
-                .map(good -> {
-                    goodRepository.delete(good);    // 이미 존재하면 지움
-                    return -1;                      // -1만큼 바꿈
-                })
-                .orElseGet(() -> {                  // null이라면
-                    goodRepository.save(            // good 테이블에 저장
+                .map(Good::getId)
+                    .map(good -> {
+                        goodRepository.deleteById(good);
+                        return -1;
+                    })
+                .orElseGet(() -> {
+                    goodRepository.save(
                             Good.builder()
                                     .user(user)
                                     .campaign(campaign)
                                     .build());
                     return 1;
-                    }
-                );
+                });
 
         campaignRepository.save(campaign.changeLikeCnt(changeNum));
 
