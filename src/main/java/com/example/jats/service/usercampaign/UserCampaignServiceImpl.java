@@ -1,4 +1,4 @@
-package com.example.jats.service.user;
+package com.example.jats.service.usercampaign;
 
 import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.participate.ParticipateRepository;

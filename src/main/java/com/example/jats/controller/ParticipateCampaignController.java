@@ -1,7 +1,7 @@
 package com.example.jats.controller;
 
 import com.example.jats.payload.response.CampaignBasicListResponse;
-import com.example.jats.service.user.UserCampaignService;
+import com.example.jats.service.usercampaign.UserCampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
