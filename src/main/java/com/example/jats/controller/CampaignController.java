@@ -1,11 +1,13 @@
 package com.example.jats.controller;
 
+import com.example.jats.entity.user.enums.Region;
 import com.example.jats.payload.request.CampaignRequest;
 import com.example.jats.payload.response.CampaignListResponse;
 import com.example.jats.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,8 +19,8 @@ public class CampaignController {
     private final CampaignService campaignService;
 
     @GetMapping
-    public CampaignListResponse getCampaignList(Pageable pageable) {
-        return campaignService.getCampaignList(pageable);
+    public CampaignListResponse getCampaignList(Pageable pageable, @RequestParam @Nullable Region region) {
+        return campaignService.getCampaignList(pageable, region);
     }
 
     @PostMapping

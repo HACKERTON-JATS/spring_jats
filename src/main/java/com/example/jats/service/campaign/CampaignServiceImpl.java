@@ -9,6 +9,7 @@ import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.good.GoodRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
+import com.example.jats.entity.user.enums.Region;
 import com.example.jats.exceptions.AlreadyParticipateException;
 import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.exceptions.InvalidAccessException;
@@ -59,14 +60,15 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public CampaignListResponse getCampaignList(Pageable pageable) {
+    public CampaignListResponse getCampaignList(Pageable pageable, Region region) {
         if(!authenticationFacade.isLogin())
             throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
         Page<Campaign> campaignList = campaignRepository.
-                findAllByIsAcceptedTrueAndRegionAndEndAtAfterOrderByLikeCntDesc(user.getRegion(), LocalDateTime.now(), pageable);
+                findAllByIsAcceptedTrueAndRegionAndEndAtAfterOrderByLikeCntDesc
+                        (region == null ? user.getRegion() : region, LocalDateTime.now(), pageable);
 
         List<CampaignContentResponse> campaignContentResponses = new ArrayList<>();
 
