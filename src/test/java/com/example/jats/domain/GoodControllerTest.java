@@ -3,10 +3,12 @@ package com.example.jats.domain;
 import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
+import com.example.jats.entity.good.Good;
 import com.example.jats.entity.good.GoodRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.entity.user.enums.Region;
+import com.example.jats.exceptions.CampaignNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,6 +82,32 @@ public class GoodControllerTest {
         mockMvc.perform(patch("/like/"+campaign.getId()))
                 .andExpect(status().isOk());
 
+        Campaign campaign1 = campaignRepository.findById(campaign.getId())
+                .orElseThrow(CampaignNotFoundException::new);
+
+        Assertions.assertEquals(campaign1.getLikeCnt(), 1);
+    }
+
+
+    @Test
+    @WithMockUser(username = "id2", password = "pwd2")
+    void cancelGood() throws Exception {
+        Campaign campaign = createCampaign("content", "title1", true);
+        goodRepository.save(
+                Good.builder()
+                        .campaign(campaign)
+                        .user(userRepository.findById("id2").get())
+                        .build()
+        );
+        campaignRepository.save(campaign.changeLikeCnt(1));
+
+        mockMvc.perform(patch("/like/"+campaign.getId()))
+                .andExpect(status().isOk());
+
+        Campaign campaign1 = campaignRepository.findById(campaign.getId())
+                .orElseThrow(CampaignNotFoundException::new);
+
+        Assertions.assertEquals(campaign1.getLikeCnt(), 0);
     }
 
     public Campaign createCampaign(String content, String title, boolean isAccepted) {

@@ -35,19 +35,23 @@ public class GoodServiceImpl implements GoodService {
         Campaign campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(CampaignNotFoundException::new);
 
-        int changeNum = 1;
-        if (!campaign.getGoods().stream().anyMatch(good -> good.getUser().equals(user))) {
-            goodRepository.save(
-                Good.builder()
-                        .campaign(campaign)
-                        .user(user)
-                        .build()
-            );
-        }else {
-            changeNum = -1;
-            goodRepository.delete(campaign.getGoods().stream().filter(good -> good.getUser().equals(user)).
-                    findFirst().orElseThrow(LikeNotFoundException::new));
-        }
+
+        int changeNum = campaign.getGoods().stream().filter(good -> good.getUser().equals(user))
+                .findFirst()
+                .map(good -> {
+                    goodRepository.delete(good);    // 이미 존재하면 지움
+                    return -1;                      // -1만큼 바꿈
+                })
+                .orElseGet(() -> {                  // null이라면
+                    goodRepository.save(            // good 테이블에 저장
+                            Good.builder()
+                                    .user(user)
+                                    .campaign(campaign)
+                                    .build());
+                    return 1;
+                    }
+                );
+
         campaignRepository.save(campaign.changeLikeCnt(changeNum));
 
     }
