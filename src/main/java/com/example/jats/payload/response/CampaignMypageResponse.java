@@ -13,13 +13,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CampaignContentResponse {
+public class CampaignMypageResponse {
 
     private Long id;
 
     private String title;
-
-    private String content;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd`T`hh:mm:SS")
     private LocalDateTime endAt;
@@ -30,13 +28,4 @@ public class CampaignContentResponse {
     private Long likeCnt;
 
     private Boolean isLiked;
-
-    private List<String> path;
-
-    private List<String> fileName;
-
-    private Boolean isMine;
-
-    private Boolean isAttendance;
-
 }

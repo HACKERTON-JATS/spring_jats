@@ -6,6 +6,7 @@ import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.good.Good;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.enums.Region;
+import com.example.jats.payload.request.CampaignRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -65,7 +66,7 @@ public class Campaign {
     @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User writer;
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
@@ -77,6 +78,15 @@ public class Campaign {
 
     public Campaign changeLikeCnt(int num) {
         this.likeCnt += num;
+        return this;
+    }
+
+    public Campaign updateCampaign(CampaignRequest campaignRequest) {
+        this.title = campaignRequest.getTitle();
+        this.content = campaignRequest.getContent();
+        this.endAt = campaignRequest.getEndAt();
+        this.region = campaignRequest.getRegion();
+        this.isAccepted = false;
         return this;
     }
 }

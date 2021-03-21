@@ -1,7 +1,7 @@
 package com.example.jats.service.user;
 
-import com.example.jats.payload.response.RegionResponse;
+import com.example.jats.payload.response.UserResponse;
 
 public interface UserService {
-    RegionResponse getUserRegion();
+    UserResponse getUserRegion();
 }

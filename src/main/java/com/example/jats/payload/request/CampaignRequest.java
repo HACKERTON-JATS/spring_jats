@@ -34,7 +34,7 @@ public class CampaignRequest {
                 .createdAt(LocalDateTime.now())
                 .isAccepted(false)
                 .title(title)
-                .user(user)
+                .writer(user)
                 .endAt(endAt)
                 .likeCnt(0L)
                 .build();

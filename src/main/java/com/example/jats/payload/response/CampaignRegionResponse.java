@@ -7,19 +7,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CampaignBasicResponse {
+public class CampaignRegionResponse {
 
     private Long id;
 
     private String title;
-
-    private String content;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd`T`hh:mm:SS")
     private LocalDateTime endAt;
@@ -31,7 +28,8 @@ public class CampaignBasicResponse {
 
     private Boolean isLiked;
 
-    private List<String> path;
+    private String path;
 
-    private List<String> fileName;
+    private String fileName;
+
 }

@@ -39,4 +39,9 @@ public class CampaignController {
     public Long deleteCampaign(@PathVariable Long campaignId) {
         return campaignService.deleteCampaign(campaignId);
     }
+
+    @PutMapping("/{campaignId}")
+    public void updateCampaign(@PathVariable Long campaignId, @RequestBody CampaignRequest campaignRequest) {
+        campaignService.updateCampaign(campaignId, campaignRequest);
+    }
 }

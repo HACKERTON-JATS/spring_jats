@@ -10,8 +10,7 @@ import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.entity.user.enums.Region;
 import com.example.jats.payload.request.CampaignRequest;
-import com.example.jats.payload.response.CampaignBasicListResponse;
-import com.example.jats.payload.response.CampaignListResponse;
+import com.example.jats.payload.response.CampaignMyPageListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
@@ -113,11 +112,11 @@ public class ParticipateControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        CampaignBasicListResponse response = new ObjectMapper().registerModule(
-                new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), CampaignBasicListResponse.class);
+        CampaignMyPageListResponse response = new ObjectMapper().registerModule(
+                new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), CampaignMyPageListResponse.class);
 
-        Assertions.assertEquals(response.getCampaignBasicResponses().size(), 3);
-        Assertions.assertEquals(response.getCampaignBasicResponses().get(0).getTitle(), "watched");
+        Assertions.assertEquals(response.getCampaignMypageRespons().size(), 3);
+        Assertions.assertEquals(response.getCampaignMypageRespons().get(0).getTitle(), "watched");
     }
 
 
@@ -125,7 +124,7 @@ public class ParticipateControllerTest {
         Campaign campaign = campaignRepository.save(Campaign.builder()
                 .content(content)
                 .likeCnt(0L)
-                .user(userRepository.findById("id").get())
+                .writer(userRepository.findById("id").get())
                 .region(Region.KANGWON)
                 .title(title)
                 .createdAt(LocalDateTime.now())

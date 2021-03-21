@@ -114,7 +114,7 @@ public class GoodControllerTest {
         return campaignRepository.save(Campaign.builder()
                 .content(content)
                 .likeCnt(0L)
-                .user(userRepository.findById("id2").get())
+                .writer(userRepository.findById("id2").get())
                 .region(Region.NORTHCHUNG)
                 .title(title)
                 .createdAt(LocalDateTime.now())

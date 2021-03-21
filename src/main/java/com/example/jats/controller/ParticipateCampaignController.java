@@ -1,6 +1,6 @@
 package com.example.jats.controller;
 
-import com.example.jats.payload.response.CampaignBasicListResponse;
+import com.example.jats.payload.response.CampaignMyPageListResponse;
 import com.example.jats.service.usercampaign.UserCampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ public class ParticipateCampaignController {
     private final UserCampaignService userCampaignService;
 
     @GetMapping("/list")
-    public CampaignBasicListResponse getParticipateCampaign(Pageable pageable) {
+    public CampaignMyPageListResponse getParticipateCampaign(Pageable pageable) {
         return userCampaignService.getUserCampaign(pageable);
     }
 }

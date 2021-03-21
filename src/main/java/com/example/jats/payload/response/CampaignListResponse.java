@@ -10,11 +10,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class CampaignListResponse extends PageResponse {
-    private List<CampaignContentResponse> campaignContentResponses;
+    private List<CampaignRegionResponse> campaignRegionResponses;
 
     @Builder
-    public CampaignListResponse(Long totalElements, Integer totalPages, List<CampaignContentResponse> campaignContentResponses) {
+    public CampaignListResponse(Long totalElements, Integer totalPages, List<CampaignRegionResponse> campaignRegionResponses) {
         super(totalElements, totalPages);
-        this.campaignContentResponses = campaignContentResponses;
+        this.campaignRegionResponses = campaignRegionResponses;
     }
 }

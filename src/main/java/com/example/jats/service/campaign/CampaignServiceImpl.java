@@ -15,9 +15,9 @@ import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.exceptions.InvalidAccessException;
 import com.example.jats.exceptions.UserNotFoundException;
 import com.example.jats.payload.request.CampaignRequest;
-import com.example.jats.payload.response.CampaignBasicResponse;
 import com.example.jats.payload.response.CampaignContentResponse;
 import com.example.jats.payload.response.CampaignListResponse;
+import com.example.jats.payload.response.CampaignRegionResponse;
 import com.example.jats.security.auth.AuthenticationFacade;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +70,7 @@ public class CampaignServiceImpl implements CampaignService {
                 findAllByIsAcceptedTrueAndRegionAndEndAtAfterOrderByLikeCntDesc
                         (region == null ? user.getRegion() : region, LocalDateTime.now(), pageable);
 
-        List<CampaignContentResponse> campaignContentResponses = new ArrayList<>();
+        List<CampaignRegionResponse> campaignRegionResponses = new ArrayList<>();
 
         for(Campaign campaign : campaignList) {
 
@@ -78,26 +78,24 @@ public class CampaignServiceImpl implements CampaignService {
             boolean isLiked = Lists.transform(campaign.getGoods(),
                     liked -> liked.getUser()).stream().anyMatch(liker -> liker.getId().equals(user.getId()));
 
-            campaignContentResponses.add(
-                    CampaignContentResponse.builder()
+            campaignRegionResponses.add(
+                    CampaignRegionResponse.builder()
                             .title(campaign.getTitle())
-                            .content(campaign.getContent())
                             .createdAt(campaign.getCreatedAt())
                             .id(campaign.getId())
                             .endAt(campaign.getEndAt())
                             .isLiked(campaign.getIsAccepted())
-                            .fileName(Lists.transform(campaign.getCampaignFiles(), file -> file.getFileName()))
-                            .path(Lists.transform(campaign.getCampaignFiles(), file -> file.getPath()))
+                            .fileName(campaign.getCampaignFiles().get(0).getFileName())
+                            .path(campaign.getCampaignFiles().get(0).getPath())
                             .likeCnt(campaign.getLikeCnt())
                             .isLiked(isLiked)
-                            .isMine(campaign.getUser().equals(user))
                             .build()
             );
         }
         return CampaignListResponse.builder()
                 .totalPages(campaignList.getTotalPages())
                 .totalElements(campaignList.getTotalElements())
-                .campaignContentResponses(campaignContentResponses)
+                .campaignRegionResponses(campaignRegionResponses)
                 .build();
     }
 
@@ -131,7 +129,7 @@ public class CampaignServiceImpl implements CampaignService {
                 .orElseThrow(CampaignNotFoundException::new);
 
         if (!userRepository.findById(authenticationFacade.getUserId())
-                .orElseThrow(UserNotFoundException::new).equals(campaign.getUser())) {
+                .orElseThrow(UserNotFoundException::new).equals(campaign.getWriter())) {
             throw new InvalidAccessException();
         }
 
@@ -143,6 +141,22 @@ public class CampaignServiceImpl implements CampaignService {
 
         return campaignId;
 
+    }
+
+    @Override
+    public void updateCampaign(Long campaignId, CampaignRequest request) {
+        if(!authenticationFacade.isLogin())
+            throw new InvalidAccessException();
+
+        Campaign campaign = campaignRepository.findById(campaignId)
+                .orElseThrow(CampaignNotFoundException::new);
+
+        if(!userRepository.findById(authenticationFacade.getUserId())
+            .orElseThrow(UserNotFoundException::new).equals(campaign.getWriter())) {
+            throw new InvalidAccessException();
+        }
+
+        campaignRepository.save(campaign.updateCampaign(request));
     }
 
 }

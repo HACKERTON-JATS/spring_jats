@@ -3,7 +3,7 @@ package com.example.jats.service.user;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.exceptions.UserNotFoundException;
-import com.example.jats.payload.response.RegionResponse;
+import com.example.jats.payload.response.UserResponse;
 import com.example.jats.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,9 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public RegionResponse getUserRegion() {
+    public UserResponse getUserRegion() {
         return userRepository.findById(authenticationFacade.getUserId())
-                .map(User::getRegion)
-                .map(region -> new RegionResponse(region))
+                .map(region -> new UserResponse(region.getRegion(), region.getName(), region.getId()))
                 .orElseThrow(UserNotFoundException::new);
     }
 }

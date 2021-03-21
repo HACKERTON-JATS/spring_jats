@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegionResponse {
+public class UserResponse {
     private Region region;
+
+    private String name;
+
+    private String id;
 }

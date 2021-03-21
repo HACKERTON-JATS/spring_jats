@@ -1,6 +1,6 @@
 package com.example.jats.controller;
 
-import com.example.jats.payload.response.RegionResponse;
+import com.example.jats.payload.response.UserResponse;
 import com.example.jats.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public RegionResponse getUserRegion() {
+    public UserResponse getUserRegion() {
         return userService.getUserRegion();
     }
 

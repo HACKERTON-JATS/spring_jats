@@ -3,6 +3,8 @@ package com.example.jats.domain;
 import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
+import com.example.jats.entity.campaign_file.CampaignFile;
+import com.example.jats.entity.campaign_file.CampaignFileRepository;
 import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.good.GoodRepository;
 import com.example.jats.entity.user.User;
@@ -56,6 +58,9 @@ public class CampaignControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private CampaignFileRepository campaignFileRepository;
+
+    @Autowired
     private ParticipateRepository participateRepository;
 
     @Autowired
@@ -91,13 +96,14 @@ public class CampaignControllerTest {
         campaignRepository.save(new
                 CampaignRequest("must not be watched", LocalDateTime.now(), "content", Region.KYEONGKI).toEntity(user));
 
-        createCampaign("content", "watched", true);
-        createCampaign("content", "watched", true);
-        createCampaign("content", "watched", true);
+        createCampaignFile(createCampaign("content", "watched", true), "fileName1");
+        createCampaignFile(createCampaign("content", "watched", true), "fileName2");
+        createCampaignFile(createCampaign("content", "watched", true), "fileName3");
     }
 
     @AfterEach
     public void cleanUp() {
+        campaignFileRepository.deleteAll();
         participateRepository.deleteAll();
         goodRepository.deleteAll();
         campaignRepository.deleteAll();
@@ -115,7 +121,7 @@ public class CampaignControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        Long response = new ObjectMapper().readValue(result.getResponse().getContentAsByteArray(), Long.class);
+        Long response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), Long.class);
 
         Campaign campaign = campaignRepository.findById(response)
                 .orElseThrow(CampaignNotFoundException::new);
@@ -148,7 +154,8 @@ public class CampaignControllerTest {
                 .readValue(result.getResponse().getContentAsString(), CampaignListResponse.class);
 
         Assertions.assertEquals(response.getTotalElements(), 3L);
-        Assert.assertEquals(response.getCampaignContentResponses().get(0).getTitle(), "watched");
+        Assert.assertEquals(response.getCampaignRegionResponses().get(0).getTitle(), "watched");
+        Assert.assertEquals(response.getCampaignRegionResponses().get(2).getFileName(), "fileName1");
     }
 
     @Test
@@ -188,12 +195,22 @@ public class CampaignControllerTest {
         return campaignRepository.save(Campaign.builder()
                 .content(content)
                 .likeCnt(0L)
-                .user(userRepository.findById("id").get())
+                .writer(userRepository.findById("id").get())
                 .region(Region.NORTHCHUNG)
                 .title(title)
                 .createdAt(LocalDateTime.now())
                 .endAt(LocalDateTime.now().plusDays(1))
                 .isAccepted(isAccepted)
                 .build());
+    }
+
+    public void createCampaignFile(Campaign campaign, String fileName) {
+        campaignFileRepository.save(
+                CampaignFile.builder()
+                        .path("C://daf")
+                        .fileName(fileName)
+                        .campaign(campaign)
+                        .build()
+        );
     }
 }

@@ -44,7 +44,7 @@ public class User {
     private List<Comment> comments;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "writer")
     private List<Campaign> campaigns;
 
     @JsonBackReference

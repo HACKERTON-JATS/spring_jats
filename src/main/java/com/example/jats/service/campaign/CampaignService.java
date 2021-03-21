@@ -14,4 +14,6 @@ public interface CampaignService {
     void participateCampaign(Long campaignId);
 
     Long deleteCampaign(Long campaignId);
+
+    void updateCampaign(Long campaignId, CampaignRequest request);
 }
