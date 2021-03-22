@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class GoodServiceImpl implements GoodService {
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(InvalidAccessException::new);
 
-        Campaign campaign = campaignRepository.findById(campaignId)
+        Campaign campaign = campaignRepository.findByIdAndIsAcceptedTrueAndEndAtAfter(campaignId, LocalDateTime.now())
                 .orElseThrow(CampaignNotFoundException::new);
 
 

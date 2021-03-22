@@ -12,6 +12,7 @@ import com.example.jats.entity.user.UserRepository;
 import com.example.jats.entity.user.enums.Region;
 import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.payload.request.CampaignRequest;
+import com.example.jats.payload.response.CampaignContentResponse;
 import com.example.jats.payload.response.CampaignListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -143,19 +144,28 @@ public class CampaignControllerTest {
 
     @Test
     @WithMockUser(username = "id",password = "pwd")
-    void getCampaignListTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/campaign")
-                .param("size", "10")
-                .param("page", "0"))
+    void getCampaignTest() throws Exception {
+        Campaign campaign = createCampaign("content22", "title22", true);
+
+        MvcResult result = mockMvc.perform(get("/campaign/"+campaign.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        CampaignListResponse response = new ObjectMapper().registerModule(new JavaTimeModule())
-                .readValue(result.getResponse().getContentAsString(), CampaignListResponse.class);
+        CampaignContentResponse response = new ObjectMapper().registerModule(new JavaTimeModule())
+                .readValue(result.getResponse().getContentAsString(), CampaignContentResponse.class);
 
-        Assertions.assertEquals(response.getTotalElements(), 3L);
-        Assert.assertEquals(response.getCampaignRegionResponses().get(0).getTitle(), "watched");
-        Assert.assertEquals(response.getCampaignRegionResponses().get(2).getFileName(), "fileName1");
+        Assertions.assertEquals(response.getTitle(), "title22");
+        Assertions.assertEquals(response.getContent(), "content22");
+    }
+
+    @Test
+    @WithMockUser(username = "id",password = "pwd")
+    void getCampaignTest_NOT_FOUND() throws Exception {
+        Campaign campaign = createCampaign("title22", "content22", false);
+
+        MvcResult result = mockMvc.perform(get("/campaign/"+campaign.getId()))
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 
     @Test
@@ -167,6 +177,15 @@ public class CampaignControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(patch("/campaign/"+campaign.getId()))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithMockUser(username = "id", password = "pwd")
+    void participateCampaignTest_NOTFOUND() throws Exception {
+        Campaign campaign = createCampaign("watched11", "watched", false);
+
+        mockMvc.perform(patch("/campaign/"+campaign.getId()))
+                .andExpect(status().isNotFound());
     }
 
     @Test

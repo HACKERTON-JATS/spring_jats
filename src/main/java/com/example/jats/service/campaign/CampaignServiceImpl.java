@@ -159,4 +159,29 @@ public class CampaignServiceImpl implements CampaignService {
         campaignRepository.save(campaign.updateCampaign(request));
     }
 
+    @Override
+    public CampaignContentResponse getCampaign(Long campaignId) {
+        if(!authenticationFacade.isLogin())
+            throw new InvalidAccessException();
+
+        Campaign campaign = campaignRepository.findByIdAndIsAcceptedTrueAndEndAtAfter(campaignId, LocalDateTime.now())
+                .orElseThrow(CampaignNotFoundException::new);
+
+        User user = userRepository.findById(authenticationFacade.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        return CampaignContentResponse.builder()
+                .isMine(campaign.getWriter().equals(user))
+                .content(campaign.getContent())
+                .likeCnt(campaign.getLikeCnt())
+                .createdAt(campaign.getCreatedAt())
+                .endAt(campaign.getEndAt())
+                .isLiked(campaign.getGoods().stream().anyMatch(good -> good.getUser().equals(user)))
+                .path(Lists.transform(campaign.getCampaignFiles(), files -> files.getPath()))
+                .fileName(Lists.transform(campaign.getCampaignFiles(), files -> files.getFileName()))
+                .title(campaign.getTitle())
+                .isAttendance(campaign.getParticipates().stream().anyMatch(participate -> participate.getUser().equals(user)))
+                .build();
+    }
+
 }

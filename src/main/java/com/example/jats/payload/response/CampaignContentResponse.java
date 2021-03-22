@@ -15,8 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CampaignContentResponse {
 
-    private Long id;
-
     private String title;
 
     private String content;

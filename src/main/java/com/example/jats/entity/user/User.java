@@ -5,6 +5,7 @@ import com.example.jats.entity.comment.Comment;
 import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.good.Good;
 import com.example.jats.entity.user.enums.Region;
+import com.example.jats.payload.request.UpdateUserRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,5 +51,12 @@ public class User {
     @JsonBackReference
     @OneToMany(mappedBy = "user")
     private List<Participate> Participates;
+
+    public User updateUser(UpdateUserRequest request, String password) {
+        this.region = request.getRegion();
+        this.name = request.getName();
+        this.password = password;
+        return this;
+    }
 
 }

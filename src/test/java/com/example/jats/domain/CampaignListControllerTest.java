@@ -3,18 +3,19 @@ package com.example.jats.domain;
 import com.example.jats.JatsApplication;
 import com.example.jats.entity.campaign.Campaign;
 import com.example.jats.entity.campaign.CampaignRepository;
+import com.example.jats.entity.campaign_file.CampaignFile;
+import com.example.jats.entity.campaign_file.CampaignFileRepository;
 import com.example.jats.entity.good.GoodRepository;
-import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
 import com.example.jats.entity.user.enums.Region;
-import com.example.jats.exceptions.UserNotFoundException;
+import com.example.jats.exceptions.CampaignNotFoundException;
 import com.example.jats.payload.request.CampaignRequest;
-import com.example.jats.payload.request.UpdateUserRequest;
-import com.example.jats.payload.response.CampaignMyPageListResponse;
+import com.example.jats.payload.response.CampaignListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JatsApplication.class)
 @ActiveProfiles({"test"})
-public class ParticipateControllerTest {
+public class CampaignListControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -58,6 +59,9 @@ public class ParticipateControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private CampaignFileRepository campaignFileRepository;
+
+    @Autowired
     private ParticipateRepository participateRepository;
 
     @Autowired
@@ -71,7 +75,7 @@ public class ParticipateControllerTest {
 
         User user = userRepository.save(
                 User.builder()
-                        .region(Region.KANGWON)
+                        .region(Region.NORTHCHUNG)
                         .name("hong")
                         .password(passwordEncoder.encode("pwd"))
                         .id("id")
@@ -93,13 +97,14 @@ public class ParticipateControllerTest {
         campaignRepository.save(new
                 CampaignRequest("must not be watched", LocalDateTime.now(), "content", Region.KYEONGKI).toEntity(user));
 
-        createCampaign("content", "watched", true);
-        createCampaign("content", "watched", true);
-        createCampaign("content", "watched", true);
+        createCampaignFile(createCampaign("content", "watched", true), "fileName1");
+        createCampaignFile(createCampaign("content", "watched", true), "fileName2");
+        createCampaignFile(createCampaign("content", "watched", true), "fileName3");
     }
 
     @AfterEach
     public void cleanUp() {
+        campaignFileRepository.deleteAll();
         participateRepository.deleteAll();
         goodRepository.deleteAll();
         campaignRepository.deleteAll();
@@ -108,53 +113,41 @@ public class ParticipateControllerTest {
 
     @Test
     @WithMockUser(username = "id",password = "pwd")
-    void getCampaignList() throws Exception {
-        MvcResult result = mockMvc.perform(get("/mypage/campaign")
+    void getCampaignListTest() throws Exception {
+        MvcResult result = mockMvc.perform(get("/campaign/list")
                 .param("size", "10")
                 .param("page", "0"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        CampaignMyPageListResponse response = new ObjectMapper().registerModule(
-                new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), CampaignMyPageListResponse.class);
+        CampaignListResponse response = new ObjectMapper().registerModule(new JavaTimeModule())
+                .readValue(result.getResponse().getContentAsString(), CampaignListResponse.class);
 
-        Assertions.assertEquals(response.getCampaignMypageResponse().size(), 3);
-        Assertions.assertEquals(response.getCampaignMypageResponse().get(0).getTitle(), "watched");
-    }
-
-    @Test
-    @WithMockUser(username = "id", password = "pwd")
-    void updateUserInfo() throws Exception {
-        UpdateUserRequest request = new UpdateUserRequest("name2", "password2", Region.NORTHJEONRA);
-
-        mockMvc.perform(put("/mypage")
-                .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
-
-        User user = userRepository.findById("id")
-                .orElseThrow(UserNotFoundException::new);
-
-        Assertions.assertEquals(request.getName(), user.getName());
+        Assertions.assertEquals(response.getTotalElements(), 3L);
+        Assert.assertEquals(response.getCampaignRegionResponses().get(0).getTitle(), "watched");
+        Assert.assertEquals(response.getCampaignRegionResponses().get(2).getFileName(), "fileName1");
     }
 
     public Campaign createCampaign(String content, String title, boolean isAccepted) {
-        Campaign campaign = campaignRepository.save(Campaign.builder()
+        return campaignRepository.save(Campaign.builder()
                 .content(content)
                 .likeCnt(0L)
                 .writer(userRepository.findById("id").get())
-                .region(Region.KANGWON)
+                .region(Region.NORTHCHUNG)
                 .title(title)
                 .createdAt(LocalDateTime.now())
                 .endAt(LocalDateTime.now().plusDays(1))
                 .isAccepted(isAccepted)
                 .build());
-        participateRepository.save(
-                Participate.builder()
-                        .user(userRepository.findById("id").get())
+    }
+
+    public void createCampaignFile(Campaign campaign, String fileName) {
+        campaignFileRepository.save(
+                CampaignFile.builder()
+                        .path("C://daf")
+                        .fileName(fileName)
                         .campaign(campaign)
                         .build()
         );
-        return campaign;
     }
 }

@@ -2,6 +2,7 @@ package com.example.jats.controller;
 
 import com.example.jats.entity.user.enums.Region;
 import com.example.jats.payload.request.CampaignRequest;
+import com.example.jats.payload.response.CampaignContentResponse;
 import com.example.jats.payload.response.CampaignListResponse;
 import com.example.jats.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class CampaignController {
 
     private final CampaignService campaignService;
 
-    @GetMapping
-    public CampaignListResponse getCampaignList(Pageable pageable, @RequestParam @Nullable Region region) {
-        return campaignService.getCampaignList(pageable, region);
+    @GetMapping("/{campaignId}")
+    public CampaignContentResponse getCampaign(@PathVariable Long campaignId) {
+        return campaignService.getCampaign(campaignId);
     }
 
     @PostMapping
