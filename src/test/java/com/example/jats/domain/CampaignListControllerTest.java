@@ -125,7 +125,7 @@ public class CampaignListControllerTest {
 
         Assertions.assertEquals(response.getTotalElements(), 3L);
         Assert.assertEquals(response.getCampaignRegionResponses().get(0).getTitle(), "watched");
-        Assert.assertEquals(response.getCampaignRegionResponses().get(2).getFileName(), "fileName1");
+        Assert.assertEquals(response.getCampaignRegionResponses().get(2).getFileName(), "fileName2");
     }
 
     public Campaign createCampaign(String content, String title, boolean isAccepted) {
