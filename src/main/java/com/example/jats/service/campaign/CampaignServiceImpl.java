@@ -45,8 +45,6 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public Long createCampaign(CampaignRequest request) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -61,8 +59,6 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public CampaignListResponse getCampaignList(Pageable pageable, Region region) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -101,8 +97,6 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public void participateCampaign(Long campaignId) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(InvalidAccessException::new);
 
@@ -123,8 +117,6 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public Long deleteCampaign(Long campaignId) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         Campaign campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(CampaignNotFoundException::new);
 
@@ -145,8 +137,6 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public void updateCampaign(Long campaignId, CampaignRequest request) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
 
         Campaign campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(CampaignNotFoundException::new);

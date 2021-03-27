@@ -4,8 +4,6 @@ import com.example.jats.entity.participate.Participate;
 import com.example.jats.entity.participate.ParticipateRepository;
 import com.example.jats.entity.user.User;
 import com.example.jats.entity.user.UserRepository;
-import com.example.jats.exceptions.IdAlreadyExistException;
-import com.example.jats.exceptions.InvalidAccessException;
 import com.example.jats.exceptions.UserNotFoundException;
 import com.example.jats.payload.request.UpdateUserRequest;
 import com.example.jats.payload.response.CampaignMyPageListResponse;
@@ -31,8 +29,6 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public CampaignMyPageListResponse getUserCampaign(Pageable pageable) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -62,9 +58,6 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void updateUser(UpdateUserRequest request) {
-        if (!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
-
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 

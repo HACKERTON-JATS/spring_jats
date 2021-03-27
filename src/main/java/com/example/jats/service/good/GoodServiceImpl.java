@@ -28,8 +28,6 @@ public class GoodServiceImpl implements GoodService {
     @Override
     @Transactional
     public void createLike(Long campaignId) {
-        if(!authenticationFacade.isLogin())
-            throw new InvalidAccessException();
         User user = userRepository.findById(authenticationFacade.getUserId())
                 .orElseThrow(InvalidAccessException::new);
 
