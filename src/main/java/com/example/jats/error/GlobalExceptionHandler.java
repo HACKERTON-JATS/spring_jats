@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
         final ErrorCode code = e.getCode();
         return new ResponseEntity<>(new ErrorResponse(code.getStatus(), code.getMessage()),
                 HttpStatus.valueOf(code.getStatus()));
