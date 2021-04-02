@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -57,24 +58,24 @@ public class Campaign {
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Good> goods;
+    private List<Good> goods = new ArrayList<>();
 
     @JsonManagedReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User writer;
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<CampaignFile> campaignFiles;
+    private List<CampaignFile> campaignFiles = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Participate> Participates;
+    private List<Participate> Participates = new ArrayList<>();
 
     public Campaign changeLikeCnt(int num) {
         this.likeCnt += num;

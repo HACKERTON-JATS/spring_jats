@@ -32,12 +32,12 @@ public class Comment {
 
     @JsonManagedReference
     @JoinColumn(name = "campaign_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Campaign campaign;
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @JsonBackReference

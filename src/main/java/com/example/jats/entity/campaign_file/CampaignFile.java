@@ -27,7 +27,7 @@ public class CampaignFile {
 
     private String path;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonManagedReference
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
