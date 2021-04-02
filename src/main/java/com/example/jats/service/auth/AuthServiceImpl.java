@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUpRequest request) {
         userRepository.findById(request.getId())
-                .ifPresent(user -> {throw new UserAlreadyExistException();});
+                .ifPresent(user -> {throw new UserNotFoundException();});
         userRepository.save(
                 User.builder()
                         .id(request.getId())

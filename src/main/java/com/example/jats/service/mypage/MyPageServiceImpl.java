@@ -58,9 +58,8 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void updateUser(UpdateUserRequest request) {
-        User user = userRepository.findById(authenticationFacade.getUserId())
+        userRepository.findById(authenticationFacade.getUserId())
+                .map(user1 -> userRepository.save(user1.updateUser(request, passwordEncoder.encode(request.getPassword()))))
                 .orElseThrow(UserNotFoundException::new);
-
-        userRepository.save(user.updateUser(request, passwordEncoder.encode(request.getPassword())));
     }
 }
