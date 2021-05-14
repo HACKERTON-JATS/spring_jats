@@ -58,11 +58,11 @@ public class Campaign {
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Good> goods = new ArrayList<>();
+    private List<Good> goods;
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,11 +71,11 @@ public class Campaign {
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<CampaignFile> campaignFiles = new ArrayList<>();
+    private List<CampaignFile> campaignFiles;
 
     @JsonBackReference
     @OneToMany(mappedBy = "campaign")
-    private List<Participate> Participates = new ArrayList<>();
+    private List<Participate> Participates;
 
     public Campaign changeLikeCnt(int num) {
         this.likeCnt += num;
